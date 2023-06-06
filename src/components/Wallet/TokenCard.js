@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 import './NFTCard.css';
 
 function NFTCard({ nft }) {
   const [isTxHistoryOpen, setIsTxHistoryOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [imageData, setImageData] = useState(null);
 
   const handleTxHistoryClick = () => {
     setIsTxHistoryOpen(!isTxHistoryOpen);
@@ -12,6 +15,26 @@ function NFTCard({ nft }) {
   const handleTxClick = (index) => {
     setActiveIndex(index === activeIndex ? null : index);
   };
+
+  const formatDate = (timestamp) => {
+    const date = new Date(Number(timestamp) * 1000);
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+  };
+  useEffect(() => {
+    const fetchImageData = async () => {
+      if (nft.type === 'ERC721') {
+        try {
+          const response = await axios.get(nft.uri, { responseType: 'arraybuffer' });
+          const imageData = Buffer.from(response.data, 'binary').toString('base64');
+          setImageData(imageData);
+        } catch (error) {
+          console.error('Error fetching image data:', error);
+        }
+      }
+    };
+  
+    fetchImageData();
+  }, [nft.uri]);
 
   return (
     <div className="nft-card">
@@ -39,8 +62,9 @@ function NFTCard({ nft }) {
           <span className="nft-value">{nft.type}</span>
         </div>
         <div className="nft-info">
-          <span className="nft-field">Transaction History:</span>
-          <div className="tx-summary" onClick={handleTxHistoryClick}>
+      
+        <span className="nft-field">Transaction History:</span>
+        <div className="tx-summary" onClick={handleTxHistoryClick}>
             <span className="tx-field">Total Transactions:</span>
             <span className="tx-value">{nft.txHistory.length}</span>
           </div>
@@ -50,7 +74,7 @@ function NFTCard({ nft }) {
                 <span className="tx-field">Block Hash:</span>
                 <span className="block-hash">{tx.blockHash}</span>
                 <span className="tx-field">Timestamp:</span>
-                <span className="tx-value">{tx.timeStamp}</span>
+                <span className="tx-value">{formatDate(tx.timeStamp)}</span>
               </div>
               {index === activeIndex && (
                 <div className="tx-details">

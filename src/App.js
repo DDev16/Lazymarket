@@ -8,7 +8,6 @@ import MyTokens from './components/MyNFTs/MyTokens';
 import Home from './components/Home/Home';
 import Footer from './components/Footer/Footer.js';
 // import DeployContract from './components/deploy/DeployContract.js';
-import './components/Wallet/TokenList.js'
 import TokenList from './components/Wallet/TokenList.js';
 import MarketList from './components/Marketplace/Listing.js';
 function App() {

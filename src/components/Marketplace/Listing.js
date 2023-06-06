@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Web3Context } from '../../utils/Web3Provider';
 import './Listing.css';
 import MarketListings from './MarketListings/MarketListings';
+import BatchListing from './Batch/BatchListing';
 const MarketList = () => {
   const { web3, marketplaceContract } = useContext(Web3Context);
   const [tokenDetails, setTokenDetails] = useState({
@@ -170,7 +171,9 @@ const MarketList = () => {
         </div>
       )}
       <button type="submit" className="list-token-button">List Token</button>
+      <BatchListing />
       <MarketListings />
+      
     </form>
     
    

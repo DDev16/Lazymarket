@@ -7,8 +7,6 @@ import songbirdLogo from '../../assets/songbird-logo.png';
 import flareLogo from '../../assets/flarelogo.png';
 import { FaWallet } from 'react-icons/fa';
 
-
-// Styled Components
 const StyledNav = styled.nav`
   background-color: #252525;
   color: #ffffff;
@@ -104,8 +102,8 @@ const NavBar = () => {
   const { web3 } = useContext(Web3Context);
   const [currentNetworkId, setCurrentNetworkId] = useState('');
   const [selectedNetwork, setSelectedNetwork] = useState(null);
+  const [account, setAccount] = useState('');
 
-  // update selected network on handleNetworkChange
   const handleNetworkChange = async (e) => {
     const networkId = parseInt(e.target.value, 10);
     if (web3 && web3.currentProvider.isMetaMask) {
@@ -119,7 +117,7 @@ const NavBar = () => {
         } else if (networkId === 14) {
           setSelectedNetwork(flareLogo);
         } else if (networkId === 31337) {
-          setSelectedNetwork(null); // Use null or provide a logo for Hardhat
+          setSelectedNetwork(null); 
         }
       } catch (error) {
         console.error(error);
@@ -138,8 +136,11 @@ const NavBar = () => {
           } else if (networkId === 14) {
             setSelectedNetwork(flareLogo);
           } else if (networkId === 31337) {
-            setSelectedNetwork(null); // Use null or provide a logo for Hardhat
+            setSelectedNetwork(null); 
           }
+
+          const accounts = await web3.eth.getAccounts();
+          setAccount(accounts[0]);
         } catch (error) {
           console.error(error);
         }
@@ -149,14 +150,10 @@ const NavBar = () => {
     getCurrentNetworkId();
   }, [web3]);
 
- 
-
   return (
     <StyledNav>
       <Logo>
-        {/* Replace 'logo.png' with the path to your logo image */}
         <img src="./logo.png" alt="Logo" />
-        {/* Replace 'Your App Name' with your actual app name */}
         <span className="app-name">Flare Community Lazy Minting</span>
       </Logo>
       <NavLinks>
@@ -184,25 +181,28 @@ const NavBar = () => {
             My NFTs
           </Link>
         </li>
-        <li>
-          <Link to="/token-list">
-            <FaWallet className="nav-icon" />
-            Wallet
-          </Link>
-        </li>
+      
         <li>
           <Link to="/marketplace">
             <FaWallet className="nav-icon" />
             Marketplace
           </Link>
         </li>
+        {account && (
+          <li>
+  <Link to="/token-list">
+                <FaWallet className="nav-icon" />
+              Connected Wallet: {account}
+            </Link>
+          </li>
+        )}
       </NavLinks>
       <NetworkSelect value={currentNetworkId} onChange={handleNetworkChange}>
-      <option value="19">Songbird</option>
-      <option value="14">Flare</option>
-      <option value="31337">Hardhat</option>
-    </NetworkSelect>
-    {selectedNetwork && <LogoImage src={selectedNetwork} alt="Selected Network" />}
+        <option value="19">Songbird</option>
+        <option value="14">Flare</option>
+        <option value="31337">Hardhat</option>
+      </NetworkSelect>
+      {selectedNetwork && <LogoImage src={selectedNetwork} alt="Selected Network" />}
     </StyledNav>
   );
 };

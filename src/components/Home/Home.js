@@ -1,6 +1,7 @@
 import React from 'react';
 import brand from '../../assets/logo.png';
 import '../../index.css';
+import MarketListings from '../Marketplace/MarketListings/MarketListings';
 
 
 const Home = () => {
@@ -17,7 +18,7 @@ const Home = () => {
         <a href="/mint" style={styles.buttonLink}>Click here to mint</a>
       </button>
       {/* Add more information or features of the dapp */}
-  
+  <MarketListings />
     </div>
   );
 };
